@@ -24,6 +24,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Rebuild high-quality product image
+        shell: bash
+        run: |
+          cat .image-src/product.*.b64 | tr -d '\n\r ' | base64 --decode > assets/product.webp
+          test -s assets/product.webp
+          test "$(stat -c%s assets/product.webp)" -gt 50000
+          rm -rf .image-src
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
